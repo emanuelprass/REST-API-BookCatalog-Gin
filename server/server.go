@@ -42,4 +42,5 @@ func (server *ApiServer) registerRouter() {
 	server.Router.GET("api/books/:bookID", bookHandler.GetByID)
 	server.Router.POST("api/insertbook", bookHandler.AddBook)
 	server.Router.PATCH("api/updatebook/:bookID", bookHandler.UpdateBook)
+	server.Router.DELETE("api/books/:bookID", bookHandler.DeleteBook)
 }

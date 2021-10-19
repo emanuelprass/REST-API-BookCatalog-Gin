@@ -13,6 +13,7 @@ type BookUsecase interface {
 	GetByID(id int) (*transport.GetBookResponse, *transport.ResponseError)
 	AddBook(data transport.InsertBook) (*transport.GeneralResponse, *transport.ResponseError)
 	UpdateBook(id int, data transport.UpdateBook) (*transport.GeneralResponse, *transport.ResponseError)
+	DeleteBook(id int) (*transport.GeneralResponse, *transport.ResponseError)
 }
 
 type bookUsecase struct {
@@ -121,4 +122,31 @@ func (b *bookUsecase) UpdateBook(id int, data transport.UpdateBook) (*transport.
 	}
 
 	return res, nil
+}
+
+func (b *bookUsecase) DeleteBook(id int) (*transport.GeneralResponse, *transport.ResponseError) {
+	_, err := b.repository.GetByID(id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			responseError := &transport.ResponseError{
+				Message: "Data not found, please check yout request",
+				Status:  http.StatusNotFound,
+			}
+			return nil, responseError
+		}
+	}
+	er := b.repository.DeleteBook(id)
+	if er != nil {
+		responseError := &transport.ResponseError{
+			Message: "Can't delete data",
+			Status:  http.StatusConflict,
+		}
+		return nil, responseError
+	}
+
+	response := &transport.GeneralResponse{
+		Message: "Data deleted",
+		// Status : http.StatusAccepted,
+	}
+	return response, nil
 }
