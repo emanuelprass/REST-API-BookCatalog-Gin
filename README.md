@@ -7,6 +7,7 @@ The purpose of this API is to learn to make a REST API.
 
 - Go version 1.16.5
 - Run command go mod tidy to install dependency
+- MySQl Database
 
 ## Project structure
 
